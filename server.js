@@ -41,39 +41,55 @@ const setupDatabase = async () => {
         table.timestamp('created_at').defaultTo(db.fn.now());
       });
       
-      // Insert sample data
+      // Insert sample data with Instagram-like content
       await db('reels').insert([
         {
-          title: 'Amazing sunset at the beach',
-          author: 'Jane Smith',
-          username: '@jane_videos',
-          likes: 4523,
-          comments: 142,
+          title: 'Dance challenge with friends #trending',
+          author: 'Jessica Lopez',
+          username: 'dance_with_jess',
+          likes: 45231,
+          comments: 1420,
           video_url: 'https://example.com/video1.mp4'
         },
         {
-          title: 'Mountain hiking adventure',
-          author: 'Mike Johnson',
-          username: '@mike_travels',
-          likes: 2198,
-          comments: 89,
+          title: 'Quick tutorial: How to take professional photos with your phone 📱',
+          author: 'Michael Chen',
+          username: 'photo_pro_mike',
+          likes: 21984,
+          comments: 892,
           video_url: 'https://example.com/video2.mp4'
         },
         {
-          title: 'DIY home decor ideas',
-          author: 'Sarah Williams',
-          username: '@sarah_creates',
-          likes: 7845,
-          comments: 356,
+          title: 'My morning routine 🌞 #morningroutine #productivity',
+          author: 'Sofia Williams',
+          username: 'lifestyle_sofia',
+          likes: 78451,
+          comments: 3562,
           video_url: 'https://example.com/video3.mp4'
         },
         {
-          title: '5-minute workout routine',
-          author: 'Alex Peterson',
-          username: '@alex_fitness',
-          likes: 3567,
-          comments: 124,
+          title: 'Easy recipe: 1-minute chocolate mug cake 🍰 #foodie',
+          author: 'Chef Alex',
+          username: 'cooking_with_alex',
+          likes: 35672,
+          comments: 1243,
           video_url: 'https://example.com/video4.mp4'
+        },
+        {
+          title: 'The most beautiful sunset you will ever see 😍 #travel',
+          author: 'Nina Travels',
+          username: 'nina_around_world',
+          likes: 92147,
+          comments: 4231,
+          video_url: 'https://example.com/video5.mp4'
+        },
+        {
+          title: 'Behind the scenes of my latest photoshoot 📸 #photography',
+          author: 'Ryan James',
+          username: 'ryan_creates',
+          likes: 18294,
+          comments: 753,
+          video_url: 'https://example.com/video6.mp4'
         }
       ]);
       

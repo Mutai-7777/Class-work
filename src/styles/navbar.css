@@ -12,6 +12,16 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Instagram-style navbar */
+.navbar.instagram-style {
+  background-color: #000;
+  color: white;
+  height: 44px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
 .back-button {
   background: none;
   border: none;
@@ -29,6 +39,14 @@
   flex: 1;
 }
 
+.instagram-style .navbar-title {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
 .navbar-actions {
   display: flex;
 }
@@ -41,4 +59,15 @@
   padding: 8px;
   margin-left: 8px;
   cursor: pointer;
+}
+
+.instagram-style .action-button {
+  font-size: 1.1rem;
+  color: white;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.instagram-style .action-button:hover {
+  opacity: 1;
 }

@@ -33,7 +33,8 @@ function App() {
       </div>
       <BottomNavigation 
         activeScreen={activeScreen} 
-        setActiveScreen={setActiveScreen} 
+        setActiveScreen={setActiveScreen}
+        className={activeScreen === 'reels' ? 'instagram-style' : ''}
       />
     </div>
   );
