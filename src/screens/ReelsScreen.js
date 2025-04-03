@@ -277,7 +277,24 @@ function ReelsScreen() {
                     </div>
                     <span className="action-count">{formatCount(reel.comments)}</span>
                   </div>
-                  <div className="reel-side-action">
+                  <div 
+                    className="reel-side-action"
+                    onClick={() => {
+                      if (navigator.share && reel.permalink) {
+                        navigator.share({
+                          title: reel.title || 'Instagram Reel',
+                          text: reel.caption || 'Check out this Instagram Reel',
+                          url: reel.permalink
+                        }).catch(err => {
+                          console.error('Error sharing:', err);
+                          alert('Shared: ' + reel.title);
+                        });
+                      } else {
+                        // Fallback for browsers without Web Share API
+                        alert('Shared: ' + (reel.title || 'Instagram Reel'));
+                      }
+                    }}
+                  >
                     <div className="action-icon">
                       <ShareIcon />
                     </div>

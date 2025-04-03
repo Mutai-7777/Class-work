@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import '../styles/profilescreen.css';
 
@@ -27,6 +27,9 @@ function ProfileScreen() {
     setProfileData({...editedData});
     setIsEditing(false);
     alert('Profile updated successfully!');
+    
+    // Save to localStorage
+    localStorage.setItem('profileData', JSON.stringify(editedData));
   };
   
   const handleChange = (e) => {
@@ -35,6 +38,23 @@ function ProfileScreen() {
       ...prev,
       [name]: value
     }));
+  };
+  
+  // Load profile data from localStorage on mount
+  useEffect(() => {
+    const savedProfile = localStorage.getItem('profileData');
+    if (savedProfile) {
+      try {
+        setProfileData(JSON.parse(savedProfile));
+      } catch (error) {
+        console.error('Error loading saved profile:', error);
+      }
+    }
+  }, []);
+  
+  const handleExploreContent = () => {
+    // Navigate to Home screen
+    window.dispatchEvent(new CustomEvent('navigateTo', { detail: { screen: 'home' } }));
   };
   
   return (
@@ -164,7 +184,7 @@ function ProfileScreen() {
         <div className="activity-empty-state">
           <i className="fas fa-history activity-empty-icon"></i>
           <p>No recent activities to display</p>
-          <button className="button ripple">Explore Content</button>
+          <button className="button ripple" onClick={handleExploreContent}>Explore Content</button>
         </div>
       </div>
     </div>

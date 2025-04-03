@@ -13,6 +13,8 @@ function SettingsScreen() {
   const [language, setLanguage] = useState('English');
   const [showDataSaverModal, setShowDataSaverModal] = useState(false); 
   const [dataSaver, setDataSaver] = useState('Off');
+  const [showPersonalInfoModal, setShowPersonalInfoModal] = useState(false);
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
   
   // Apply dark mode effect when the toggle changes
   useEffect(() => {
@@ -73,6 +75,19 @@ function SettingsScreen() {
   const handleDataSaverSelect = (option) => {
     setDataSaver(option);
     setShowDataSaverModal(false);
+  };
+  
+  const handlePersonalInfo = () => {
+    setShowPersonalInfoModal(true);
+  };
+  
+  const handleSecurity = () => {
+    setShowSecurityModal(true);
+  };
+  
+  const handleNavigateToProfile = () => {
+    // Navigate to profile screen
+    window.dispatchEvent(new CustomEvent('navigateTo', { detail: { screen: 'profile' } }));
   };
   
   const handleSignOut = () => {
@@ -206,7 +221,7 @@ function SettingsScreen() {
       <div className="settings-group">
         <h3 className="settings-group-title">Account</h3>
         <div className="settings-list">
-          <div className="settings-item action-item">
+          <div className="settings-item action-item" onClick={handlePersonalInfo}>
             <div className="settings-item-info">
               <i className="fas fa-user settings-item-icon"></i>
               <div className="settings-item-content">
@@ -216,7 +231,7 @@ function SettingsScreen() {
             <i className="fas fa-chevron-right"></i>
           </div>
           
-          <div className="settings-item action-item">
+          <div className="settings-item action-item" onClick={handleSecurity}>
             <div className="settings-item-info">
               <i className="fas fa-lock settings-item-icon"></i>
               <div className="settings-item-content">
@@ -392,6 +407,94 @@ function SettingsScreen() {
                   <span className="option-text">High</span>
                   <span className="option-description">Load images at lower resolution and disable auto-play</span>
                   {dataSaver === 'High' && <i className="fas fa-check"></i>}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Personal Information Modal */}
+      {showPersonalInfoModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Personal Information</h3>
+              <button className="modal-close" onClick={() => setShowPersonalInfoModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="settings-message">
+                <p>To edit your personal information, please go to your profile page.</p>
+                <button 
+                  className="button primary-button"
+                  onClick={() => {
+                    handleNavigateToProfile();
+                    setShowPersonalInfoModal(false);
+                  }}
+                >
+                  Go to Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Security Modal */}
+      {showSecurityModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Security</h3>
+              <button className="modal-close" onClick={() => setShowSecurityModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="modal-body">
+              <ul className="option-list">
+                <li className="option-item">
+                  <div className="security-option">
+                    <div>
+                      <span className="option-text">Two-Factor Authentication</span>
+                      <span className="option-description">Add an extra layer of security to your account</span>
+                    </div>
+                    <button className="button outline-button" onClick={() => {
+                      alert('Two-factor authentication would be set up here');
+                      setShowSecurityModal(false);
+                    }}>
+                      Set Up
+                    </button>
+                  </div>
+                </li>
+                <li className="option-item">
+                  <div className="security-option">
+                    <div>
+                      <span className="option-text">Password</span>
+                      <span className="option-description">Change your account password</span>
+                    </div>
+                    <button className="button outline-button" onClick={() => {
+                      alert('Password change form would appear here');
+                      setShowSecurityModal(false);
+                    }}>
+                      Change
+                    </button>
+                  </div>
+                </li>
+                <li className="option-item">
+                  <div className="security-option">
+                    <div>
+                      <span className="option-text">Login Activity</span>
+                      <span className="option-description">Review your account login history</span>
+                    </div>
+                    <button className="button outline-button" onClick={() => {
+                      alert('Login activity would be displayed here');
+                      setShowSecurityModal(false);
+                    }}>
+                      View
+                    </button>
+                  </div>
                 </li>
               </ul>
             </div>

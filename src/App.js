@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StatusBar from './components/StatusBar';
 import BottomNavigation from './components/BottomNavigation';
 import HomeScreen from './screens/HomeScreen';
@@ -9,6 +9,22 @@ import './styles/global.css';
 
 function App() {
   const [activeScreen, setActiveScreen] = useState('home');
+  
+  // Add event listener for custom navigation
+  useEffect(() => {
+    const handleNavigation = (event) => {
+      const { screen } = event.detail;
+      if (screen) {
+        setActiveScreen(screen);
+      }
+    };
+    
+    window.addEventListener('navigateTo', handleNavigation);
+    
+    return () => {
+      window.removeEventListener('navigateTo', handleNavigation);
+    };
+  }, []);
 
   const renderScreen = () => {
     switch (activeScreen) {

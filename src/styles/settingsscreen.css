@@ -251,6 +251,72 @@ input:checked + .toggle-slider:before {
   color: #4285F4;
 }
 
+/* Security options */
+.security-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.security-option button {
+  padding: 8px 16px;
+  border: 1px solid #4285F4;
+  color: #4285F4;
+  background-color: transparent;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  margin-left: 12px;
+}
+
+.security-option button:hover {
+  background-color: #f0f7ff;
+}
+
+/* Settings message */
+.settings-message {
+  padding: 16px;
+  text-align: center;
+}
+
+.settings-message p {
+  margin: 0 0 16px;
+  font-size: 0.9375rem;
+  color: #555;
+}
+
+.primary-button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.primary-button:hover {
+  background-color: #3367d6;
+}
+
+.outline-button {
+  background-color: transparent;
+  color: #4285F4;
+  border: 1px solid #4285F4;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.outline-button:hover {
+  background-color: #f0f7ff;
+}
+
 /* Dark mode styles */
 body.dark-mode {
   background-color: #121212;
@@ -315,4 +381,35 @@ body.dark-mode .option-item:hover {
 
 body.dark-mode .option-item i {
   color: #bb86fc;
+}
+
+body.dark-mode .security-option button {
+  border-color: #bb86fc;
+  color: #bb86fc;
+}
+
+body.dark-mode .security-option button:hover {
+  background-color: #332940;
+}
+
+body.dark-mode .settings-message p {
+  color: #aaa;
+}
+
+body.dark-mode .primary-button {
+  background-color: #bb86fc;
+  color: #121212;
+}
+
+body.dark-mode .primary-button:hover {
+  background-color: #a370d8;
+}
+
+body.dark-mode .outline-button {
+  border-color: #bb86fc;
+  color: #bb86fc;
+}
+
+body.dark-mode .outline-button:hover {
+  background-color: #332940;
 }
