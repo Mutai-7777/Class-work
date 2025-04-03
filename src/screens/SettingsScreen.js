@@ -16,6 +16,11 @@ function SettingsScreen() {
   const [showPersonalInfoModal, setShowPersonalInfoModal] = useState(false);
   const [showSecurityModal, setShowSecurityModal] = useState(false);
   
+  // Add state for security settings
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showActivityModal, setShowActivityModal] = useState(false);
+  
   // Apply dark mode effect when the toggle changes
   useEffect(() => {
     if (darkMode) {
@@ -26,7 +31,7 @@ function SettingsScreen() {
     
     // Save preferences to localStorage
     savePreferences();
-  }, [darkMode, notifications, emailUpdates, autoplay, fontSize, language, dataSaver]);
+  }, [darkMode, notifications, emailUpdates, autoplay, fontSize, language, dataSaver, twoFactorEnabled]);
   
   // Initialize settings from localStorage on component mount
   useEffect(() => {
@@ -41,6 +46,7 @@ function SettingsScreen() {
         setFontSize(preferences.fontSize || 'Normal');
         setLanguage(preferences.language || 'English');
         setDataSaver(preferences.dataSaver || 'Off');
+        setTwoFactorEnabled(preferences.twoFactorEnabled || false);
       } catch (error) {
         console.error('Error loading saved preferences:', error);
       }
@@ -55,7 +61,8 @@ function SettingsScreen() {
       autoplay,
       fontSize,
       language,
-      dataSaver
+      dataSaver,
+      twoFactorEnabled
     };
     
     localStorage.setItem('appPreferences', JSON.stringify(preferences));
@@ -461,10 +468,11 @@ function SettingsScreen() {
                       <span className="option-description">Add an extra layer of security to your account</span>
                     </div>
                     <button className="button outline-button" onClick={() => {
-                      alert('Two-factor authentication would be set up here');
-                      setShowSecurityModal(false);
+                      setTwoFactorEnabled(!twoFactorEnabled);
+                      savePreferences();
+                      alert(`Two-factor authentication is now ${twoFactorEnabled ? 'disabled' : 'enabled'}`);
                     }}>
-                      Set Up
+                      {twoFactorEnabled ? 'Disable' : 'Enable'}
                     </button>
                   </div>
                 </li>
@@ -475,7 +483,7 @@ function SettingsScreen() {
                       <span className="option-description">Change your account password</span>
                     </div>
                     <button className="button outline-button" onClick={() => {
-                      alert('Password change form would appear here');
+                      setShowPasswordModal(true);
                       setShowSecurityModal(false);
                     }}>
                       Change
@@ -489,12 +497,152 @@ function SettingsScreen() {
                       <span className="option-description">Review your account login history</span>
                     </div>
                     <button className="button outline-button" onClick={() => {
-                      alert('Login activity would be displayed here');
+                      setShowActivityModal(true);
                       setShowSecurityModal(false);
                     }}>
                       View
                     </button>
                   </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Change Password</h3>
+              <button className="modal-close" onClick={() => setShowPasswordModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="modal-body">
+              <form className="settings-form" onSubmit={(e) => {
+                e.preventDefault();
+                alert('Password changed successfully!');
+                setShowPasswordModal(false);
+              }}>
+                <div className="form-group">
+                  <label htmlFor="currentPassword">Current Password</label>
+                  <input 
+                    type="password" 
+                    id="currentPassword" 
+                    className="form-input" 
+                    placeholder="Enter current password"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="newPassword">New Password</label>
+                  <input 
+                    type="password" 
+                    id="newPassword" 
+                    className="form-input" 
+                    placeholder="Enter new password"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">Confirm New Password</label>
+                  <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    className="form-input" 
+                    placeholder="Confirm new password"
+                    required
+                  />
+                </div>
+                <div className="form-actions">
+                  <button type="button" className="button outline-button" onClick={() => setShowPasswordModal(false)}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="button primary-button">
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Login Activity Modal */}
+      {showActivityModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Login Activity</h3>
+              <button className="modal-close" onClick={() => setShowActivityModal(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="modal-body">
+              <ul className="activity-list">
+                <li className="activity-item">
+                  <div className="activity-info">
+                    <div className="activity-device">
+                      <i className="fas fa-mobile-alt"></i>
+                      <span>Mobile Device - Android</span>
+                    </div>
+                    <div className="activity-location">
+                      <i className="fas fa-map-marker-alt"></i>
+                      <span>New York, United States</span>
+                    </div>
+                    <div className="activity-time">
+                      <i className="fas fa-clock"></i>
+                      <span>Today, 9:15 AM</span>
+                    </div>
+                  </div>
+                  <div className="activity-status">
+                    <span className="status-indicator active"></span>
+                    <span>Current Session</span>
+                  </div>
+                </li>
+                <li className="activity-item">
+                  <div className="activity-info">
+                    <div className="activity-device">
+                      <i className="fas fa-laptop"></i>
+                      <span>Mac OS X - Chrome</span>
+                    </div>
+                    <div className="activity-location">
+                      <i className="fas fa-map-marker-alt"></i>
+                      <span>New York, United States</span>
+                    </div>
+                    <div className="activity-time">
+                      <i className="fas fa-clock"></i>
+                      <span>Yesterday, 7:32 PM</span>
+                    </div>
+                  </div>
+                  <button className="button text-button" onClick={() => {
+                    alert('Session logged out');
+                  }}>
+                    Log Out
+                  </button>
+                </li>
+                <li className="activity-item">
+                  <div className="activity-info">
+                    <div className="activity-device">
+                      <i className="fas fa-tablet-alt"></i>
+                      <span>iPad - Safari</span>
+                    </div>
+                    <div className="activity-location">
+                      <i className="fas fa-map-marker-alt"></i>
+                      <span>Chicago, United States</span>
+                    </div>
+                    <div className="activity-time">
+                      <i className="fas fa-clock"></i>
+                      <span>Apr 1, 2025, 12:45 PM</span>
+                    </div>
+                  </div>
+                  <button className="button text-button" onClick={() => {
+                    alert('Session logged out');
+                  }}>
+                    Log Out
+                  </button>
                 </li>
               </ul>
             </div>

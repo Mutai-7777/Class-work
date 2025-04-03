@@ -413,3 +413,186 @@ body.dark-mode .outline-button {
 body.dark-mode .outline-button:hover {
   background-color: #332940;
 }
+
+/* Form styles */
+.settings-form {
+  padding: 16px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9375rem;
+  color: #333;
+}
+
+.form-input:focus {
+  border-color: #4285F4;
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.text-button {
+  background: none;
+  border: none;
+  color: #4285F4;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.text-button:hover {
+  color: #3367d6;
+  text-decoration: underline;
+}
+
+/* Login activity styles */
+.activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-device, 
+.activity-location, 
+.activity-time {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+}
+
+.activity-time {
+  margin-bottom: 0;
+  color: #777;
+  font-size: 0.8125rem;
+}
+
+.activity-device i, 
+.activity-location i, 
+.activity-time i {
+  margin-right: 8px;
+  width: 16px;
+  text-align: center;
+  color: #555;
+}
+
+.activity-status {
+  display: flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: #4285F4;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-indicator.active {
+  background-color: #4CAF50;
+}
+
+/* Dark mode form styles */
+body.dark-mode .form-group label {
+  color: #aaa;
+}
+
+body.dark-mode .form-input {
+  background-color: #2a2a2a;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+body.dark-mode .form-input:focus {
+  border-color: #bb86fc;
+}
+
+body.dark-mode .text-button {
+  color: #bb86fc;
+}
+
+body.dark-mode .text-button:hover {
+  color: #a370d8;
+}
+
+body.dark-mode .activity-item {
+  border-color: #333;
+}
+
+body.dark-mode .activity-time,
+body.dark-mode .activity-device i, 
+body.dark-mode .activity-location i, 
+body.dark-mode .activity-time i {
+  color: #aaa;
+}
+
+body.dark-mode .activity-status {
+  color: #bb86fc;
+}
+
+/* Improvements for touchscreen interaction */
+@media (max-width: 768px) {
+  .form-input, 
+  .button {
+    padding: 14px; /* Larger tap targets on mobile */
+  }
+  
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .form-actions button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .activity-item button,
+  .activity-status {
+    margin-top: 12px;
+    align-self: flex-end;
+  }
+}
