@@ -1,0 +1,70 @@
+.content {
+  padding: 16px;
+}
+
+.welcome-card {
+  background-color: #4285F4;
+  color: white;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.welcome-card h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.welcome-card p {
+  margin: 8px 0 16px;
+  opacity: 0.9;
+}
+
+.welcome-card .button {
+  background-color: white;
+  color: #4285F4;
+  font-weight: 500;
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 24px 0 12px;
+  color: #333;
+}
+
+.list-item-action {
+  color: #bdbdbd;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.quick-action-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.quick-action-button i {
+  font-size: 1.5rem;
+  color: #4285F4;
+  margin-bottom: 8px;
+}
+
+.quick-action-button span {
+  font-size: 0.75rem;
+  color: #333;
+}

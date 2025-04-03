@@ -1,0 +1,138 @@
+.profile-header {
+  background-color: #4285F4;
+  color: white;
+  padding: 24px 16px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.profile-avatar i {
+  font-size: 2rem;
+}
+
+.profile-name {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.profile-email {
+  margin: 0 0 16px;
+  opacity: 0.9;
+  font-size: 0.875rem;
+}
+
+.profile-edit-button {
+  background-color: transparent;
+  border: 1px solid white;
+}
+
+.profile-stats {
+  display: flex;
+  justify-content: space-around;
+  background-color: white;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.section {
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0 0 12px;
+  color: #333;
+}
+
+.info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-icon {
+  width: 32px;
+  height: 32px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  color: #4285F4;
+}
+
+.info-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.info-value {
+  display: block;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.activity-empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.activity-empty-icon {
+  font-size: 2.5rem;
+  color: #bdbdbd;
+  margin-bottom: 16px;
+}
+
+.activity-empty-state p {
+  margin: 0 0 16px;
+  color: #666;
+}
