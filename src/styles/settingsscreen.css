@@ -145,6 +145,19 @@ input:checked + .toggle-slider:before {
   color: #757575;
 }
 
+.language-demo {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #f5f9fe;
+  border-radius: 8px;
+  border: 1px solid #d0e1fd;
+}
+
+.translate-text {
+  font-size: 0.9rem;
+  color: #4285F4;
+}
+
 /* Modal styles */
 .modal-overlay {
   position: fixed;
@@ -337,6 +350,15 @@ body.dark-mode .settings-item-description,
 body.dark-mode .settings-action,
 body.dark-mode .app-version {
   color: #aaa;
+}
+
+body.dark-mode .language-demo {
+  background-color: #332940;
+  border-color: #bb86fc;
+}
+
+body.dark-mode .translate-text {
+  color: #bb86fc;
 }
 
 body.dark-mode .settings-item-icon {

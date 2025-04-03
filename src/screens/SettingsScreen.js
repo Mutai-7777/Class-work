@@ -21,12 +21,38 @@ function SettingsScreen() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showActivityModal, setShowActivityModal] = useState(false);
   
-  // Apply dark mode effect when the toggle changes
+  // Apply settings effects when the toggles change
   useEffect(() => {
+    // Dark mode
     if (darkMode) {
       document.body.classList.add('dark-mode');
     } else {
       document.body.classList.remove('dark-mode');
+    }
+    
+    // Font size
+    document.body.classList.remove('font-small', 'font-normal', 'font-large', 'font-xl');
+    switch(fontSize) {
+      case 'Small':
+        document.body.classList.add('font-small');
+        break;
+      case 'Normal':
+        document.body.classList.add('font-normal');
+        break;
+      case 'Large':
+        document.body.classList.add('font-large');
+        break;
+      case 'Extra Large':
+        document.body.classList.add('font-xl');
+        break;
+      default:
+        document.body.classList.add('font-normal');
+    }
+    
+    // Language
+    document.body.classList.remove('lang-english', 'lang-spanish', 'lang-french', 'lang-german', 'lang-chinese');
+    if (language !== 'English') {
+      document.body.classList.add(`lang-${language.toLowerCase()}`);
     }
     
     // Save preferences to localStorage
@@ -278,6 +304,25 @@ function SettingsScreen() {
       
       <div className="app-info">
         <p className="app-version">Version 1.0.0</p>
+        
+        {/* Demo text that shows language changes */}
+        {language !== 'English' && (
+          <div className="language-demo">
+            <p className="translate-text">This text shows the selected language: <strong>{language}</strong></p>
+            {language === 'Spanish' && (
+              <p className="translate-text">¡Hola! El idioma ha sido cambiado a Español</p>
+            )}
+            {language === 'French' && (
+              <p className="translate-text">Bonjour! La langue a été changée en Français</p>
+            )}
+            {language === 'German' && (
+              <p className="translate-text">Hallo! Die Sprache wurde auf Deutsch umgestellt</p>
+            )}
+            {language === 'Chinese' && (
+              <p className="translate-text">你好！语言已更改为中文</p>
+            )}
+          </div>
+        )}
       </div>
       
       {/* Font Size Modal */}

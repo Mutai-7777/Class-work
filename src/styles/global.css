@@ -11,6 +11,40 @@ body {
   overflow: hidden;
 }
 
+/* Font Size Classes */
+body.font-small {
+  font-size: 0.85rem;
+}
+
+body.font-normal {
+  font-size: 1rem;
+}
+
+body.font-large {
+  font-size: 1.15rem;
+}
+
+body.font-xl {
+  font-size: 1.3rem;
+}
+
+/* Language Classes - Only for demonstration */
+body.lang-spanish .translate-text::before {
+  content: "🌐 ";
+}
+
+body.lang-french .translate-text::before {
+  content: "🇫🇷 ";
+}
+
+body.lang-german .translate-text::before {
+  content: "🇩🇪 ";
+}
+
+body.lang-chinese .translate-text::before {
+  content: "🇨🇳 ";
+}
+
 .app-container {
   display: flex;
   flex-direction: column;
