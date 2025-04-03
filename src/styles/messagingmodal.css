@@ -3,12 +3,12 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 60px; /* Give space for the bottom navigation bar */
   background-color: white;
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 60px); /* Adjust height to account for bottom navigation */
 }
 
 .messaging-header {
@@ -40,9 +40,7 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  height: calc(100% - 56px);
-  /* Ensure the bottom of the container is padded to avoid overlap with navigation */
-  padding-bottom: 20px;
+  height: calc(100% - 56px); /* Subtract only the header height */
 }
 
 .contacts-list {
