@@ -1,0 +1,103 @@
+.reels-container {
+  padding: 16px;
+}
+
+.reel-card {
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.reel-video-placeholder {
+  height: 200px;
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.play-icon {
+  color: white;
+  font-size: 3rem;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.play-icon:hover {
+  opacity: 1;
+}
+
+.reel-info {
+  padding: 16px;
+}
+
+.reel-user {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.reel-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: #666;
+}
+
+.reel-user-details {
+  flex: 1;
+}
+
+.reel-author {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.reel-username {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.follow-button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.reel-title {
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+.reel-actions {
+  display: flex;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}
+
+.reel-action {
+  display: flex;
+  align-items: center;
+  margin-right: 24px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.reel-action i {
+  margin-right: 6px;
+  font-size: 1.1rem;
+}

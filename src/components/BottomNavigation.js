@@ -5,7 +5,7 @@ function BottomNavigation({ activeScreen, setActiveScreen }) {
   const navItems = [
     { id: 'home', icon: 'fa-home', label: 'Home' },
     { id: 'profile', icon: 'fa-user', label: 'Profile' },
-    { id: 'notifications', icon: 'fa-bell', label: 'Notifications' },
+    { id: 'reels', icon: 'fa-video', label: 'Reels' },
     { id: 'settings', icon: 'fa-cog', label: 'Settings' }
   ];
 

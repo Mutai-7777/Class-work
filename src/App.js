@@ -3,7 +3,7 @@ import StatusBar from './components/StatusBar';
 import BottomNavigation from './components/BottomNavigation';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import NotificationsScreen from './screens/NotificationsScreen';
+import ReelsScreen from './screens/ReelsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import './styles/global.css';
 
@@ -16,8 +16,8 @@ function App() {
         return <HomeScreen />;
       case 'profile':
         return <ProfileScreen />;
-      case 'notifications':
-        return <NotificationsScreen />;
+      case 'reels':
+        return <ReelsScreen />;
       case 'settings':
         return <SettingsScreen />;
       default:
