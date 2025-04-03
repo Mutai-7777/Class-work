@@ -10,6 +10,19 @@ function MessagingModal({ isOpen, onClose }) {
   const [photoAttachment, setPhotoAttachment] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  
+  // When the modal is opened, add a class to the body to prevent scrolling
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   // Initialize with sample contacts and messages
   useEffect(() => {
