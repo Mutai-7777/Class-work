@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import CameraModal from '../components/CameraModal';
+import MessagingModal from '../components/MessagingModal';
 import '../styles/homescreen.css';
 
 function HomeScreen() {
@@ -8,6 +10,8 @@ function HomeScreen() {
   const [newPostTitle, setNewPostTitle] = useState('');
   const [newPostContent, setNewPostContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [showMessagingModal, setShowMessagingModal] = useState(false);
   
   // Initialize with sample posts on component mount
   useEffect(() => {
@@ -122,11 +126,28 @@ function HomeScreen() {
   };
   
   const handleShare = () => {
-    alert('Share functionality would open here');
+    setShowMessagingModal(true);
   };
   
   const handleSave = () => {
     alert('Content saved!');
+  };
+  
+  const handleCameraCapture = (imageUrl) => {
+    console.log('Captured image:', imageUrl);
+    // Store the captured image in localStorage
+    const capturedImages = JSON.parse(localStorage.getItem('capturedImages') || '[]');
+    capturedImages.push({
+      id: Date.now(),
+      url: imageUrl,
+      timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('capturedImages', JSON.stringify(capturedImages));
+    
+    // Create a new post with the captured image
+    setNewPostTitle('New Photo Post');
+    setNewPostContent('Check out this new photo I just took!');
+    setShowCreatePost(true);
   };
   
   return (
@@ -225,24 +246,24 @@ function HomeScreen() {
           </button>
           <button 
             className="quick-action-button"
-            onClick={handleRefresh}
+            onClick={() => setShowCameraModal(true)}
           >
-            <i className="fas fa-sync"></i>
-            <span>Refresh</span>
+            <i className="fas fa-camera"></i>
+            <span>Camera</span>
           </button>
           <button 
             className="quick-action-button"
             onClick={handleShare}
           >
             <i className="fas fa-share-alt"></i>
-            <span>Share</span>
+            <span>Message</span>
           </button>
           <button 
             className="quick-action-button"
-            onClick={handleSave}
+            onClick={handleRefresh}
           >
-            <i className="fas fa-bookmark"></i>
-            <span>Save</span>
+            <i className="fas fa-sync"></i>
+            <span>Refresh</span>
           </button>
         </div>
         
@@ -253,6 +274,19 @@ function HomeScreen() {
           </p>
         </div>
       </div>
+      
+      {/* Camera Modal */}
+      <CameraModal 
+        isOpen={showCameraModal}
+        onClose={() => setShowCameraModal(false)}
+        onCapture={handleCameraCapture}
+      />
+      
+      {/* Messaging Modal */}
+      <MessagingModal 
+        isOpen={showMessagingModal}
+        onClose={() => setShowMessagingModal(false)}
+      />
     </div>
   );
 }

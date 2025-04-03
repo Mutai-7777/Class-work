@@ -1,29 +1,72 @@
 import React, { useState } from 'react';
 import '../styles/navbar.css';
+import CameraModal from './CameraModal';
+import MessagingModal from './MessagingModal';
 
 function Navbar({ title, showBackButton, onBackClick, className }) {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [showMessagingModal, setShowMessagingModal] = useState(false);
   
   const handleSearchClick = () => {
     setIsSearchActive(!isSearchActive);
     if (isSearchActive) {
       setSearchQuery('');
+      setSearchResults([]);
+      setShowSearchResults(false);
     }
   };
   
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    // In a real app, this would trigger search functionality
-    console.log('Searching for:', e.target.value);
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    if (query.trim().length > 0) {
+      // Simulate search functionality
+      const fakeResults = [
+        { id: 1, title: 'Search result for ' + query, type: 'post' },
+        { id: 2, title: 'Another match for ' + query, type: 'user' },
+        { id: 3, title: 'Related content to ' + query, type: 'topic' }
+      ];
+      setSearchResults(fakeResults);
+      setShowSearchResults(true);
+    } else {
+      setSearchResults([]);
+      setShowSearchResults(false);
+    }
   };
   
   const handleCameraClick = () => {
-    alert('Camera functionality would open here');
+    setShowCameraModal(true);
+  };
+  
+  const handleCameraCapture = (imageUrl) => {
+    console.log('Captured image:', imageUrl);
+    // Store the captured image in localStorage
+    const capturedImages = JSON.parse(localStorage.getItem('capturedImages') || '[]');
+    capturedImages.push({
+      id: Date.now(),
+      url: imageUrl,
+      timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('capturedImages', JSON.stringify(capturedImages));
+    
+    alert('Image captured successfully!');
   };
   
   const handleMessageClick = () => {
-    alert('Messaging functionality would open here');
+    setShowMessagingModal(true);
+  };
+  
+  const handleSearchResultClick = (result) => {
+    alert(`You clicked on: ${result.title}`);
+    setSearchQuery('');
+    setSearchResults([]);
+    setShowSearchResults(false);
+    setIsSearchActive(false);
   };
   
   return (
@@ -68,6 +111,43 @@ function Navbar({ title, showBackButton, onBackClick, className }) {
           </>
         )}
       </div>
+      
+      {/* Search Results Dropdown */}
+      {showSearchResults && searchResults.length > 0 && (
+        <div className="search-results">
+          <ul className="search-results-list">
+            {searchResults.map(result => (
+              <li 
+                key={result.id} 
+                className="search-result-item"
+                onClick={() => handleSearchResultClick(result)}
+              >
+                <i className={`fas ${
+                  result.type === 'post' ? 'fa-file-alt' : 
+                  result.type === 'user' ? 'fa-user' : 'fa-hashtag'
+                } search-result-icon`}></i>
+                <div className="search-result-text">
+                  <span>{result.title}</span>
+                  <small>{result.type}</small>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      {/* Camera Modal */}
+      <CameraModal 
+        isOpen={showCameraModal}
+        onClose={() => setShowCameraModal(false)}
+        onCapture={handleCameraCapture}
+      />
+      
+      {/* Messaging Modal */}
+      <MessagingModal 
+        isOpen={showMessagingModal}
+        onClose={() => setShowMessagingModal(false)}
+      />
     </div>
   );
 }
