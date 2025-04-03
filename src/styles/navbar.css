@@ -61,6 +61,48 @@
   cursor: pointer;
 }
 
+/* Search styles */
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 0 8px;
+  height: 36px;
+  flex: 1;
+  margin: 0 8px;
+}
+
+.search-icon {
+  color: rgba(255, 255, 255, 0.7);
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 0;
+  height: 100%;
+  flex: 1;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-cancel {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 4px;
+  cursor: pointer;
+}
+
 .instagram-style .action-button {
   font-size: 1.1rem;
   color: white;
