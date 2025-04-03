@@ -41,6 +41,69 @@
   z-index: 1;
 }
 
+.reel-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #000;
+  z-index: 1;
+}
+
+/* Instagram watermark styling */
+.instagram-watermark {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  color: white;
+}
+
+.instagram-source {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+/* Instagram verified badge styling */
+.username-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reel-timestamp {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 2px;
+}
+
+/* Instagram link button */
+.instagram-link-button {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.instagram-link-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .play-icon {
   color: white;
   font-size: 4rem;

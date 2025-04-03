@@ -3,9 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const knex = require('knex');
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Instagram API Configuration
+const INSTAGRAM_ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
+const INSTAGRAM_API_URL = 'https://graph.instagram.com';
 
 // Middleware - configure CORS to allow requests from our React app
 app.use(cors({
@@ -100,11 +105,95 @@ const setupDatabase = async () => {
   }
 };
 
+// Instagram API Functions
+async function fetchInstagramReels() {
+  try {
+    const response = await axios.get(`${INSTAGRAM_API_URL}/me/media`, {
+      params: {
+        fields: 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,username,like_count,comments_count',
+        access_token: INSTAGRAM_ACCESS_TOKEN
+      }
+    });
+
+    // Filter to only include video content (Instagram Reels/Videos)
+    const reelsData = response.data.data.filter(item => 
+      item.media_type === 'VIDEO' || item.media_type === 'REEL'
+    );
+
+    return reelsData;
+  } catch (error) {
+    console.error('Error fetching Instagram reels:', error.response?.data || error.message);
+    throw new Error('Failed to fetch Instagram reels');
+  }
+}
+
+async function fetchInstagramUser() {
+  try {
+    const response = await axios.get(`${INSTAGRAM_API_URL}/me`, {
+      params: {
+        fields: 'id,username,account_type,media_count',
+        access_token: INSTAGRAM_ACCESS_TOKEN
+      }
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching Instagram user:', error.response?.data || error.message);
+    throw new Error('Failed to fetch Instagram user');
+  }
+}
+
 // Routes
+// Endpoint to get Instagram reels
+app.get('/api/instagram/reels', async (req, res) => {
+  try {
+    const reelsData = await fetchInstagramReels();
+    res.json(reelsData);
+  } catch (error) {
+    console.error('Error in Instagram reels endpoint:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint to get Instagram user info
+app.get('/api/instagram/user', async (req, res) => {
+  try {
+    const userData = await fetchInstagramUser();
+    res.json(userData);
+  } catch (error) {
+    console.error('Error in Instagram user endpoint:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Original reels endpoint (now as a fallback)
 app.get('/api/reels', async (req, res) => {
   try {
-    const reels = await db.select('*').from('reels').orderBy('created_at', 'desc');
-    res.json(reels);
+    // First try to get reels from Instagram
+    try {
+      const instagramReels = await fetchInstagramReels();
+      
+      // Map Instagram reels to our app's format
+      const mappedReels = instagramReels.map((reel, index) => ({
+        id: index + 1,
+        title: reel.caption || 'Instagram Reel',
+        author: reel.username || 'Instagram User',
+        username: reel.username || 'instagram_user',
+        likes: reel.like_count || 0,
+        comments: reel.comments_count || 0,
+        video_url: reel.media_url,
+        permalink: reel.permalink,
+        instagram_id: reel.id,
+        created_at: reel.timestamp
+      }));
+      
+      return res.json(mappedReels);
+    } catch (instagramError) {
+      console.log('Falling back to database reels due to Instagram API error:', instagramError.message);
+      // If Instagram API fails, fall back to database reels
+      const reels = await db.select('*').from('reels').orderBy('created_at', 'desc');
+      res.json(reels);
+    }
   } catch (error) {
     console.error('Error fetching reels:', error);
     res.status(500).json({ error: 'Failed to fetch reels' });

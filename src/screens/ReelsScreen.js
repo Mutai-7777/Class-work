@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import '../styles/reelsscreen.css';
 
 // Icons for Instagram-like UI
-const HeartIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const HeartIcon = ({ filled }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill={filled ? "red" : "none"} stroke={filled ? "red" : "currentColor"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
   </svg>
 );
@@ -31,16 +31,42 @@ const MusicIcon = () => (
   </svg>
 );
 
+// Instagram verified badge icon
+const VerifiedBadgeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3897F0" stroke="none">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.46 7.12l-5.97 5.97-3.11-3.11a.996.996 0 1 0-1.41 1.41l3.83 3.83c.39.39 1.02.39 1.41 0l6.69-6.69a.996.996 0 0 0 0-1.41c-.39-.38-1.03-.38-1.42 0z"></path>
+  </svg>
+);
+
 function ReelsScreen() {
   const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeReelIndex, setActiveReelIndex] = useState(0);
+  const [likedReels, setLikedReels] = useState({});
+  const [user, setUser] = useState(null);
+  const videoRefs = useRef({});
 
   useEffect(() => {
-    // Fetch reels from our API
+    // Fetch Instagram user data
+    const fetchInstagramUser = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/instagram/user');
+        if (!response.ok) {
+          console.warn('Could not fetch Instagram user info');
+          return;
+        }
+        const data = await response.json();
+        setUser(data);
+      } catch (err) {
+        console.warn('Error fetching Instagram user:', err);
+      }
+    };
+
+    // Fetch reels from our API (which now retrieves from Instagram)
     const fetchReels = async () => {
       try {
-        // Use the full URL since we don't have proxy configuration
+        // The /api/reels endpoint now tries Instagram first, with fallback to db
         const response = await fetch('http://localhost:3001/api/reels');
         
         if (!response.ok) {
@@ -50,29 +76,66 @@ function ReelsScreen() {
         const data = await response.json();
         setReels(data);
         setLoading(false);
+        
+        // Initialize likedReels state
+        const initialLikedState = {};
+        data.forEach(reel => {
+          initialLikedState[reel.id] = false;
+        });
+        setLikedReels(initialLikedState);
+        
+        // Also fetch Instagram user data
+        fetchInstagramUser();
       } catch (err) {
         console.error('Error fetching reels:', err);
-        setError('Failed to load reels. Server may not be running.');
+        setError('Failed to load Instagram reels. Please check your connection and Instagram access token.');
         setLoading(false);
       }
     };
 
     fetchReels();
+    
+    // Cleanup function for videos
+    return () => {
+      Object.values(videoRefs.current).forEach(videoRef => {
+        if (videoRef && videoRef.pause) {
+          videoRef.pause();
+        }
+      });
+    };
   }, []);
 
-  // Function to start the server if it's not running
-  const startServer = async () => {
+  // Function to restart and try again
+  const retryFetch = async () => {
     setLoading(true);
     setError(null);
     
-    // In a real app, we would add logic to start the server
-    // Since this is a demo, we'll just refresh the page and try to fetch again
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    try {
+      const response = await fetch('http://localhost:3001/api/reels');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setReels(data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching reels on retry:', err);
+      setError('Failed to load Instagram reels. Please check your connection and Instagram access token.');
+      setLoading(false);
+    }
   };
 
+  // Handle like interaction with visual feedback
   const handleLike = async (id) => {
+    // Toggle the liked state for this reel
+    setLikedReels(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+    
+    // Update like count on the server
     try {
       const response = await fetch(`http://localhost:3001/api/reels/${id}/like`, {
         method: 'PUT'
@@ -90,28 +153,68 @@ function ReelsScreen() {
       ));
     } catch (err) {
       console.error('Error liking reel:', err);
+      // Revert the liked state if the request failed
+      setLikedReels(prev => ({
+        ...prev,
+        [id]: !prev[id]
+      }));
+    }
+  };
+  
+  // Function to format large numbers in Instagram style (e.g., 4.5K)
+  const formatCount = (count) => {
+    if (!count && count !== 0) return '0';
+    
+    if (count >= 1000000) {
+      return `${(count / 1000000).toFixed(1)}M`;
+    } else if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}K`;
+    }
+    return count.toString();
+  };
+  
+  // Handle scroll events to determine which reel is active
+  const handleScroll = (e) => {
+    const container = e.target;
+    const scrollTop = container.scrollTop;
+    const itemHeight = container.clientHeight;
+    
+    const newActiveIndex = Math.floor(scrollTop / itemHeight);
+    
+    if (newActiveIndex !== activeReelIndex) {
+      setActiveReelIndex(newActiveIndex);
+      
+      // Pause all videos
+      Object.values(videoRefs.current).forEach(videoRef => {
+        if (videoRef && videoRef.pause) {
+          videoRef.pause();
+        }
+      });
+      
+      // Play the active video
+      const activeVideo = videoRefs.current[newActiveIndex];
+      if (activeVideo && activeVideo.play) {
+        activeVideo.play().catch(e => console.log('Auto-play prevented:', e));
+      }
     }
   };
 
   return (
     <div className="screen">
-      <Navbar title="Reels" className="instagram-style" />
+      <Navbar title="Instagram Reels" className="instagram-style" />
       
-      <div className="reels-container">
+      <div className="reels-container" onScroll={handleScroll}>
         {loading ? (
           <div className="loading-container">
             <div className="loading-spinner"></div>
-            <p>Loading reels...</p>
+            <p>Loading Instagram Reels...</p>
           </div>
         ) : error ? (
           <div className="error-container">
             <i className="fas fa-exclamation-circle"></i>
             <p>{error}</p>
             <div className="error-actions">
-              <button className="button" onClick={startServer}>
-                Start Server
-              </button>
-              <button className="button" onClick={() => window.location.reload()}>
+              <button className="button" onClick={retryFetch}>
                 Try Again
               </button>
             </div>
@@ -119,14 +222,42 @@ function ReelsScreen() {
         ) : reels.length === 0 ? (
           <div className="empty-container">
             <i className="fas fa-video-slash"></i>
-            <p>No reels available at the moment.</p>
+            <p>No Instagram Reels available at the moment.</p>
           </div>
         ) : (
-          reels.map(reel => (
-            <div key={reel.id} className="reel-card instagram-style">
+          reels.map((reel, index) => (
+            <div key={reel.id || index} className="reel-card instagram-style">
               <div className="reel-video-container">
-                <div className="reel-video-placeholder">
-                  <i className="fas fa-play-circle play-icon"></i>
+                {reel.video_url ? (
+                  <video 
+                    className="reel-video"
+                    src={reel.video_url}
+                    loop
+                    playsInline
+                    muted
+                    ref={el => videoRefs.current[index] = el}
+                    onClick={(e) => {
+                      if (e.target.paused) {
+                        e.target.play().catch(err => console.log('Play failed:', err));
+                      } else {
+                        e.target.pause();
+                      }
+                    }}
+                    poster={reel.thumbnail_url}
+                  />
+                ) : (
+                  <div className="reel-video-placeholder">
+                    <i className="fas fa-play-circle play-icon"></i>
+                  </div>
+                )}
+                
+                {/* Instagram watermark */}
+                <div className="instagram-watermark">
+                  {user && (
+                    <div className="instagram-source">
+                      from {user.username}
+                    </div>
+                  )}
                 </div>
                 
                 {/* Right side action buttons */}
@@ -136,15 +267,15 @@ function ReelsScreen() {
                     onClick={() => handleLike(reel.id)}
                   >
                     <div className="action-icon">
-                      <HeartIcon />
+                      <HeartIcon filled={likedReels[reel.id]} />
                     </div>
-                    <span className="action-count">{reel.likes > 1000 ? `${(reel.likes/1000).toFixed(1)}K` : reel.likes}</span>
+                    <span className="action-count">{formatCount(reel.likes)}</span>
                   </div>
                   <div className="reel-side-action">
                     <div className="action-icon">
                       <CommentIcon />
                     </div>
-                    <span className="action-count">{reel.comments > 1000 ? `${(reel.comments/1000).toFixed(1)}K` : reel.comments}</span>
+                    <span className="action-count">{formatCount(reel.comments)}</span>
                   </div>
                   <div className="reel-side-action">
                     <div className="action-icon">
@@ -154,24 +285,40 @@ function ReelsScreen() {
                   </div>
                 </div>
                 
-                {/* Bottom user info */}
+                {/* Bottom user info - Instagram style */}
                 <div className="reel-bottom-info">
                   <div className="reel-user-info">
                     <div className="reel-avatar">
                       <img 
-                        src={`https://ui-avatars.com/api/?name=${reel.author.replace(/\s+/g, '+')}&background=random`} 
-                        alt={reel.author}
+                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(reel.username || reel.author)}&background=random`} 
+                        alt={reel.username || reel.author}
                         className="avatar-img" 
                       />
                     </div>
                     <div className="reel-username-container">
-                      <span className="username">@{reel.username}</span>
+                      <div className="username-row">
+                        <span className="username">@{reel.username}</span>
+                        <VerifiedBadgeIcon />
+                      </div>
+                      <span className="reel-timestamp">
+                        {reel.created_at ? new Date(reel.created_at).toLocaleDateString() : 'Recently'}
+                      </span>
                     </div>
-                    <button className="follow-button">Follow</button>
+                    {reel.permalink && (
+                      <a 
+                        className="instagram-link-button" 
+                        href={reel.permalink} 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="View on Instagram"
+                      >
+                        <span>View on Instagram</span>
+                      </a>
+                    )}
                   </div>
                   
                   <div className="reel-caption">
-                    <p>{reel.title}</p>
+                    <p>{reel.title || reel.caption || 'Instagram Reel'}</p>
                   </div>
                   
                   <div className="reel-music">
@@ -179,7 +326,7 @@ function ReelsScreen() {
                       <MusicIcon />
                     </div>
                     <div className="music-text">
-                      <span>Original Audio • {reel.author}</span>
+                      <span>Original Audio • {reel.author || reel.username}</span>
                     </div>
                   </div>
                 </div>
