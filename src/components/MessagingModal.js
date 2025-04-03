@@ -6,7 +6,10 @@ function MessagingModal({ isOpen, onClose }) {
   const [selectedContact, setSelectedContact] = useState(null);
   const [messages, setMessages] = useState({});
   const [newMessage, setNewMessage] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [photoAttachment, setPhotoAttachment] = useState(null);
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Initialize with sample contacts and messages
   useEffect(() => {
@@ -139,13 +142,14 @@ function MessagingModal({ isOpen, onClose }) {
   const handleSendMessage = (e) => {
     e.preventDefault();
     
-    if (!newMessage.trim() || !selectedContact) return;
+    if ((!newMessage.trim() && !photoAttachment) || !selectedContact) return;
     
     const messageId = Date.now();
     const newMessageObj = {
       id: messageId,
       sender: 'me',
       text: newMessage,
+      image: photoAttachment ? photoAttachment.preview : null,
       timestamp: new Date().toISOString(),
       status: 'sent'
     };
@@ -160,6 +164,10 @@ function MessagingModal({ isOpen, onClose }) {
     
     setMessages(updatedMessages);
     setNewMessage('');
+    setPhotoAttachment(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     
     // Save to localStorage
     localStorage.setItem('messageHistory', JSON.stringify(updatedMessages));
@@ -167,10 +175,16 @@ function MessagingModal({ isOpen, onClose }) {
     // Simulate reply after a delay for John Doe
     if (selectedContact.id === 1) {
       setTimeout(() => {
+        let replyText = 'Thanks for your message! This is an automated reply.';
+        
+        if (photoAttachment) {
+          replyText = 'Thanks for sharing the photo! It looks great.';
+        }
+        
         const replyMessage = {
           id: messageId + 1,
           sender: 1,
-          text: 'Thanks for your message! This is an automated reply.',
+          text: replyText,
           timestamp: new Date().toISOString(),
           status: 'delivered'
         };
@@ -192,6 +206,43 @@ function MessagingModal({ isOpen, onClose }) {
   const formatTime = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const handleEmojiClick = (emoji) => {
+    setNewMessage(prevMessage => prevMessage + emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const handlePhotoAttach = () => {
+    // Trigger the file input click
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPhotoAttachment({
+          name: file.name,
+          preview: reader.result
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeAttachment = () => {
+    setPhotoAttachment(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const toggleEmojiPicker = () => {
+    setShowEmojiPicker(prevState => !prevState);
   };
 
   if (!isOpen) return null;
@@ -244,7 +295,12 @@ function MessagingModal({ isOpen, onClose }) {
                         key={message.id}
                         className={`message-bubble ${message.sender === 'me' ? 'sent' : 'received'}`}
                       >
-                        <div className="message-text">{message.text}</div>
+                        {message.image && (
+                          <div className="message-image">
+                            <img src={message.image} alt="Attached" />
+                          </div>
+                        )}
+                        {message.text && <div className="message-text">{message.text}</div>}
                         <div className="message-info">
                           <span className="message-time">{formatTime(message.timestamp)}</span>
                           {message.sender === 'me' && (
@@ -267,17 +323,96 @@ function MessagingModal({ isOpen, onClose }) {
               </div>
               
               <form className="message-input-area" onSubmit={handleSendMessage}>
+                {/* Hidden file input for photo attachment */}
                 <input
-                  type="text"
-                  placeholder="Type a message..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  className="message-input"
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  accept="image/*"
+                  onChange={handleFileChange}
                 />
+                
+                {/* Photo attachment display */}
+                {photoAttachment && (
+                  <div className="photo-attachment">
+                    <div className="attachment-preview">
+                      <img src={photoAttachment.preview} alt="Attachment" />
+                    </div>
+                    <button 
+                      type="button" 
+                      className="remove-attachment" 
+                      onClick={removeAttachment}
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                    <span className="attachment-name">{photoAttachment.name}</span>
+                  </div>
+                )}
+                
+                {/* Emoji picker */}
+                {showEmojiPicker && (
+                  <div className="emoji-picker">
+                    <div className="emoji-picker-header">
+                      <span>Emojis</span>
+                      <button 
+                        type="button" 
+                        className="close-emoji-picker" 
+                        onClick={() => setShowEmojiPicker(false)}
+                      >
+                        <i className="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <div className="emoji-list">
+                      {['😊', '😂', '❤️', '👍', '🎉', '🔥', '😍', '🤔', '👋', '🙏', '😎', '🥳', '😢', '🤣', '👏'].map(emoji => (
+                        <button 
+                          key={emoji} 
+                          type="button" 
+                          className="emoji-item" 
+                          onClick={() => handleEmojiClick(emoji)}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="message-input-actions">
+                  <button 
+                    type="button" 
+                    className="action-button" 
+                    title="Attach photo"
+                    onClick={handlePhotoAttach}
+                  >
+                    <i className="fas fa-image"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    className="action-button" 
+                    title="Add emoji"
+                    onClick={toggleEmojiPicker}
+                  >
+                    <i className="fas fa-smile"></i>
+                  </button>
+                </div>
+                <div className="message-input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Type a message..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    className="message-input"
+                  />
+                  <div className="message-input-tools">
+                    <button type="button" className="tool-button" title="Voice message">
+                      <i className="fas fa-microphone"></i>
+                    </button>
+                  </div>
+                </div>
                 <button 
                   type="submit" 
                   className="send-button"
-                  disabled={!newMessage.trim()}
+                  disabled={!newMessage.trim() && !photoAttachment}
                 >
                   <i className="fas fa-paper-plane"></i>
                 </button>

@@ -161,6 +161,18 @@
   word-break: break-word;
 }
 
+.message-image {
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 240px;
+}
+
+.message-image img {
+  width: 100%;
+  display: block;
+}
+
 .message-info {
   display: flex;
   justify-content: flex-end;
@@ -181,6 +193,112 @@
   color: #4285F4;
 }
 
+/* Photo attachment styling */
+.photo-attachment {
+  width: 100%;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: 1px solid #eee;
+}
+
+.attachment-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 12px;
+}
+
+.attachment-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.attachment-name {
+  font-size: 0.9rem;
+  color: #555;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove-attachment {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Emoji picker styling */
+.emoji-picker {
+  position: absolute;
+  bottom: 80px;
+  left: 16px;
+  width: 300px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  border: 1px solid #eee;
+}
+
+.emoji-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.close-emoji-picker {
+  background: none;
+  border: none;
+  color: #777;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 0.9rem;
+}
+
+.emoji-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 8px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.emoji-item {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.emoji-item:hover {
+  background-color: #f0f0f0;
+}
+
 .message-input-area {
   display: flex;
   align-items: center;
@@ -189,19 +307,78 @@
   border-top: 1px solid #eee;
 }
 
+.message-input-actions {
+  display: flex;
+  margin-right: 8px;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  color: #777;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1.2rem;
+}
+
+.action-button:hover {
+  background-color: #f0f0f0;
+  color: #4285F4;
+}
+
+.message-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 24px;
+  padding: 0 12px;
+  border: 1px solid #ddd;
+}
+
 .message-input {
   flex: 1;
   padding: 10px 16px;
-  border: 1px solid #ddd;
-  border-radius: 24px;
+  border: none;
+  background: transparent;
   font-size: 1rem;
+  outline: none;
+}
+
+.message-input-tools {
+  display: flex;
+}
+
+.tool-button {
+  background: none;
+  border: none;
+  color: #777;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.tool-button:hover {
+  color: #4285F4;
 }
 
 .send-button {
   background-color: #4285F4;
   color: white;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 50%;
   margin-left: 8px;
@@ -209,11 +386,18 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.send-button:hover:not(:disabled) {
+  background-color: #3367d6;
 }
 
 .send-button:disabled {
   background-color: #c5c5c5;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .empty-messages,
@@ -254,4 +438,131 @@
   .message-area.hidden {
     display: none;
   }
+}
+
+/* Dark mode messaging styles */
+body.dark-mode .messaging-modal {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .messaging-header {
+  background-color: #202020;
+}
+
+body.dark-mode .contacts-list {
+  background-color: #1a1a1a;
+  border-color: #333;
+}
+
+body.dark-mode .contact-item {
+  border-color: #333;
+}
+
+body.dark-mode .contact-item.selected {
+  background-color: #332940;
+}
+
+body.dark-mode .contact-item:hover {
+  background-color: #2a2a2a;
+}
+
+body.dark-mode .contact-avatar {
+  background-color: #333;
+}
+
+body.dark-mode .contact-status {
+  color: #aaa;
+}
+
+body.dark-mode .message-header {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+body.dark-mode .message-list {
+  background-color: #1a1a1a;
+}
+
+body.dark-mode .message-bubble.sent {
+  background-color: #332940;
+  color: #e0e0e0;
+}
+
+body.dark-mode .message-bubble.received {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+}
+
+body.dark-mode .message-input-area {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+body.dark-mode .message-input-wrapper {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+body.dark-mode .message-input {
+  color: #e0e0e0;
+}
+
+body.dark-mode .action-button,
+body.dark-mode .tool-button {
+  color: #aaa;
+}
+
+body.dark-mode .action-button:hover,
+body.dark-mode .tool-button:hover {
+  background-color: #333;
+  color: #bb86fc;
+}
+
+body.dark-mode .send-button {
+  background-color: #bb86fc;
+  color: #121212;
+}
+
+body.dark-mode .send-button:hover:not(:disabled) {
+  background-color: #a370d8;
+}
+
+body.dark-mode .empty-state {
+  color: #aaa;
+}
+
+body.dark-mode .empty-icon {
+  color: #444;
+}
+
+/* Dark mode for emoji picker and attachments */
+body.dark-mode .emoji-picker {
+  background-color: #202020;
+  border-color: #333;
+}
+
+body.dark-mode .emoji-picker-header {
+  border-color: #333;
+}
+
+body.dark-mode .emoji-item:hover {
+  background-color: #333;
+}
+
+body.dark-mode .close-emoji-picker {
+  color: #aaa;
+}
+
+body.dark-mode .photo-attachment {
+  background-color: #2a2a2a;
+  border-color: #333;
+}
+
+body.dark-mode .attachment-name {
+  color: #aaa;
+}
+
+body.dark-mode .message-image {
+  border: 1px solid #333;
 }
