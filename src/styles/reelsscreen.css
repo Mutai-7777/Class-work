@@ -76,6 +76,11 @@
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.follow-button:active {
+  background-color: #3367d6;
 }
 
 .reel-title {
@@ -95,9 +100,100 @@
   margin-right: 24px;
   color: #666;
   font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.reel-action:active {
+  color: #4285F4;
 }
 
 .reel-action i {
   margin-right: 6px;
   font-size: 1.1rem;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4285F4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error state */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  text-align: center;
+}
+
+.error-container i {
+  font-size: 3rem;
+  color: #DB4437;
+  margin-bottom: 16px;
+}
+
+.error-container p {
+  margin-bottom: 16px;
+  color: #666;
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:active {
+  background-color: #3367d6;
+}
+
+/* Empty state */
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  text-align: center;
+  color: #666;
+}
+
+.empty-container i {
+  font-size: 3rem;
+  color: #757575;
+  margin-bottom: 16px;
 }
